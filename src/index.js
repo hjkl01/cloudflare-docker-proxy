@@ -1,3 +1,15 @@
+import DOCS from "./help.html";
+
+// return docs
+if (url.pathname === "/") {
+  return new Response(DOCS, {
+    status: 200,
+    headers: {
+      "content-type": "text/html",
+    },
+  });
+}
+
 addEventListener("fetch", (event) => {
   event.passThroughOnException();
   event.respondWith(handleRequest(event.request));
@@ -7,17 +19,17 @@ const dockerHub = "https://registry-1.docker.io";
 
 const routes = {
   // production
-  "docker.libcuda.so": dockerHub,
-  "quay.libcuda.so": "https://quay.io",
-  "gcr.libcuda.so": "https://gcr.io",
-  "k8s-gcr.libcuda.so": "https://k8s.gcr.io",
-  "k8s.libcuda.so": "https://registry.k8s.io",
-  "ghcr.libcuda.so": "https://ghcr.io",
-  "cloudsmith.libcuda.so": "https://docker.cloudsmith.io",
-  "ecr.libcuda.so": "https://public.ecr.aws",
+  "docker.hjkl01.cn": dockerHub,
+  "quay.hjkl01.cn": "https://quay.io",
+  "gcr.hjkl01.cn": "https://gcr.io",
+  "k8s-gcr.hjkl01.cn": "https://k8s.gcr.io",
+  "k8s.hjkl01.cn": "https://registry.k8s.io",
+  "ghcr.hjkl01.cn": "https://ghcr.io",
+  "cloudsmith.hjkl01.cn": "https://docker.cloudsmith.io",
+  "ecr.hjkl01.cn": "https://public.ecr.aws",
 
   // staging
-  "docker-staging.libcuda.so": dockerHub,
+  "docker-staging.hjkl01.cn": dockerHub,
 };
 
 function routeByHosts(host) {
@@ -40,7 +52,7 @@ async function handleRequest(request) {
       }),
       {
         status: 404,
-      }
+      },
     );
   }
   const isDockerHub = upstream == dockerHub;
@@ -61,12 +73,12 @@ async function handleRequest(request) {
       if (MODE == "debug") {
         headers.set(
           "Www-Authenticate",
-          `Bearer realm="http://${url.host}/v2/auth",service="cloudflare-docker-proxy"`
+          `Bearer realm="http://${url.host}/v2/auth",service="cloudflare-docker-proxy"`,
         );
       } else {
         headers.set(
           "Www-Authenticate",
-          `Bearer realm="https://${url.hostname}/v2/auth",service="cloudflare-docker-proxy"`
+          `Bearer realm="https://${url.hostname}/v2/auth",service="cloudflare-docker-proxy"`,
         );
       }
       return new Response(JSON.stringify({ message: "UNAUTHORIZED" }), {
